@@ -1,0 +1,27 @@
+Package: anhydrofit
+Type: Package
+Title: Fits cumulative Exponential and Weibull models to anhydrobiosis recovery data
+Version: 0.1.0
+Author: Matteo Vecchi & Sara Calhim
+Maintainer: Matteo Vecchi <matteo.vecchi15@gmail.com>
+Description: Fits cumulative Exponential and Weibull models to anhydrobiosis recovery data and analyze the fitted models.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    bayestestR,
+    circular,
+    coda,
+    ggplot2,
+    R2jags,
+    animaltracker,
+    tidyverse,
+    ggrepel,
+    magrittr,
+    knitr,
+    stringr,
+    scales,
+    tidyr,
+    dplyr,
+    crayon
+RoxygenNote: 7.1.2
