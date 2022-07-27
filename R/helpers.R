@@ -288,3 +288,22 @@ magrittr::`%>%`
 
 }
 
+
+# Wilson score method to calculate CI interval for binomial proportions
+# https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval
+# condition: "both","high","low"
+.wilson_score_interval = function(s,n,type = c("both"),quant = 0.95){
+  z = qnorm(quant,0,1)
+  p = s/n
+
+  part1 = (1/(1+(z^2/n))) * (p + ((z^2)/(2*n)))
+  part2 = (z/(1+(z^2/n))) * sqrt(((p*(1-p))/n) + ((z^2)/(4*(n^2))))
+
+  low = part1 - part2
+  high = part1 + part2
+
+  if(type == "both"){return(c(low,high))}
+  if(type == "low"){return(low)}
+  if(type == "high"){return(high)}
+}
+

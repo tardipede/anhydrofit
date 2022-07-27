@@ -1,0 +1,19 @@
+---
+title: "Quick start"
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Quick start}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(fig.align = "center")
+options(scipen = 6, width = 85)
+library(anhydrofit)
+set.seed(1234)
+```
+
+This document is a **quick overview** presenting the modelling approach used in the `anhydrofit` package.
+
+## Modelling of anhydrobiosis recover
