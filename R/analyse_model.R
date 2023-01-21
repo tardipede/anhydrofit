@@ -46,13 +46,13 @@ analyse_model = function(model,
 
   # Calculate summary tables
   p_summary = t(apply(ps, MARGIN = 2, FUN = .my_summary_function))
-  colnames(p_summary) = paste0("p ", colnames(p_summary))
+  colnames(p_summary) = paste0("p_", colnames(p_summary))
 
   Q_summary = t(apply(Qs, MARGIN = 2, FUN = .my_summary_function))
-  colnames(Q_summary) = paste0("Q ", colnames(Q_summary))
+  colnames(Q_summary) = paste0("Q_", colnames(Q_summary))
 
   AhI_summary = t(apply(AhIs, MARGIN = 2, FUN = .my_summary_function))
-  colnames(AhI_summary) = paste0("AhI ", colnames(AhI_summary))
+  colnames(AhI_summary) = paste0("AhI_", colnames(AhI_summary))
 
 
 
@@ -74,7 +74,7 @@ analyse_model = function(model,
                                     p_pval = rep(NA, nrow(pairwise.table)),
                                     Q_pval = rep(NA, nrow(pairwise.table)),
                                     AhI_pval = rep(NA, nrow(pairwise.table)),
-                                    biv_pval = rep(NA, nrow(pairwise.table)),
+                                    biv_overlap = rep(NA, nrow(pairwise.table)),
                                     biv_es = rep(NA, nrow(pairwise.table)))
 
        # Get Qnorm
@@ -85,9 +85,9 @@ analyse_model = function(model,
          pairwise.table[i, 3] = .bayes_testing(ps[, pairwise.table[i, 1]], ps[, pairwise.table[i, 2]])
          pairwise.table[i, 4] = .bayes_testing(Qs[, pairwise.table[i, 1]], Qs[, pairwise.table[i, 2]])
          pairwise.table[i, 5] = .bayes_testing(AhIs[, pairwise.table[i, 1]], AhIs[, pairwise.table[i, 2]])
-         pairwise.table[i, 6] <- bayestestR::pd_to_p(p_direction_2d(cbind(ps[, pairwise.table[i, 1]],Qs[, pairwise.table[i, 1]]),
-                                                        cbind(ps[, pairwise.table[i, 2]],Qs[, pairwise.table[i, 2]])))
-         pairwise.table[i, 7] <- .es_2d(cbind(ps[, pairwise.table[i, 1]],Qs[, pairwise.table[i, 1]]),
+         pairwise.table[i, 6] = .biv_overlap(cbind(ps[, pairwise.table[i, 1]],Qs[, pairwise.table[i, 1]]),
+                                                        cbind(ps[, pairwise.table[i, 2]],Qs[, pairwise.table[i, 2]]))
+         pairwise.table[i, 7] = .es_2d(cbind(ps[, pairwise.table[i, 1]],Qs[, pairwise.table[i, 1]]),
                                         cbind(ps[, pairwise.table[i, 2]],Qs[, pairwise.table[i, 2]]),
                                    Qnorm = Q.norm.factor)}
      results[[2]] = pairwise.table
@@ -161,7 +161,7 @@ plot_model = function(model, interval_ahi = c(0,24), DIC_treshold = 1){
                aes(x=x, y=y))+
     theme(panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), legend.position = "bottom") +
-    scale_fill_distiller(palette = "Spectral", direction = 1 )+
+    scale_fill_distiller(palette = "Spectral", direction = 1 , limits=c(0,1) )+
     geom_text_repel(data = summary_table,
                     aes(x = x, y = y, label = group),
                     min.segment.length = 0, size = 4,
@@ -208,7 +208,7 @@ plot_ahi = function(model, interval_ahi = c(0,24), DIC_treshold = 1){
   ggplot(plot_data)+
     theme_bw()+
     geom_violin(aes(x=group, y=AhI, fill=median_AhI), scale = "width", alpha=0.5, show.legend = FALSE, col=NA)+
-    scale_fill_distiller(palette = "Spectral", direction = 1 )+
+    scale_fill_distiller(palette = "Spectral", direction = 1, limits=c(0,1) )+
     stat_summary(aes(x=group, y=AhI),fun=median, colour="black", geom="point", size = 3)+
     stat_summary(aes(x=group, y=AhI),fun.data=median_hilow, colour="black", geom="linerange")+
     scale_y_continuous(breaks=seq(0,1,by=0.1), limits = c(0,1))+

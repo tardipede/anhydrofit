@@ -35,7 +35,7 @@ fit_model_exponential <- function(data,
   sink(f)
   cat("
 
-  # Prepare JAGS modelz
+  # Prepare JAGS model
   model {
     # Priors
     for (sp in 1:Nsp) {                # weak estimate Q and p separately for each species

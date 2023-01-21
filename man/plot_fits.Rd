@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_fits.R
 \name{plot_fits}
 \alias{plot_fits}
-\title{Save as pdf file in the working directory with plots showing the model fits}
+\title{Make a plot showing predicted values along with the input data}
 \usage{
 plot_fits(model)
 }
@@ -10,8 +10,8 @@ plot_fits(model)
 \item{model}{the output model from \code{fit_model} or \code{fit_multiple_models}}
 }
 \value{
-a saved pdf file mamed model_fits.pdf
+a saved pdf file named model_fits.pdf
 }
 \description{
-Save as pdf file in the working directory with plots showing the model fits
+Make a plot showing predicted values along with the input data
 }

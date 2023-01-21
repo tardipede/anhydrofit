@@ -138,37 +138,37 @@ magrittr::`%>%`
 ### Function for 2d p-direction and effect size
 
 ## Helper functions ##
-.get_angle = function(dx,dy){
-  return(atan2(dy,dx) * (180 / pi)+180)}
 
-.correct_angle = function(x){
-  if(x<0){x = 360+x}
-  if(x>360){x = x-360}
-  return(x)}
-
-.get_angle_in_interval = function(x,m, get.logical = FALSE){
-  min_a = min(.correct_angle((m-90)),.correct_angle((m+90)))
-  max_a = max(.correct_angle((m-90)),.correct_angle((m+90)))
-
-  if(get.logical == FALSE){
-    prop = mean((x > min_a) & (x < max_a))
-    if(prop < 0.5){prop = 1-prop}
-    return(prop)}
-
-  if(get.logical == TRUE){
-    prop = ((x > min_a) & (x < max_a))
-    if(mean(prop) < 0.5){prop = !prop}
-    return(prop)}
-}
-
-
+# Calculate distances between groups centroids
 .es_2d = function(group1, group2, Qnorm){
-
-  # Calculate distances between groups centroids
   diff_c1 = mean(group1[,1],na.rm=T) - mean(group2[,1],na.rm=T)
   diff_c2 = mean((group1[,2]/Qnorm),na.rm=T) - mean((group2[,2]/Qnorm), na.rm=T)
   dist_c = sqrt(diff_c1^2 + diff_c2^2)
   return(dist_c)
+}
+
+# Overlap of two bivariate distributions
+#' @importFrom MASS kde2d
+.biv_overlap = function(g1,g2,tiles = 50){
+  x_span = range(c(g1[,1],g2[,1]))
+  y_span = range(c(g1[,2],g2[,2]))
+
+  g1_k = kde2d(x = g1[,1], y = g1[,2], lims = c(x_span,y_span),n = tiles)
+  g2_k = kde2d(x = g2[,1], y = g2[,2], lims = c(x_span,y_span), n = tiles)
+
+  mygrid=data.frame(expand.grid(x=1:tiles, y=1:tiles))
+
+  count_tab =  apply(mygrid, MARGIN = 1,
+                     FUN = function(x){
+                       gr1_count = g1_k$z[x[1],x[2]]
+                       gr2_count = g2_k$z[x[1],x[2]]
+
+                       minc=min(c(gr1_count,gr2_count))
+                       maxc=max(c(gr1_count,gr2_count))
+
+                       return(c(minc,maxc))})
+  overlap = colSums(t(count_tab))[1]/colSums(t(count_tab))[2]
+  return(overlap)
 }
 
 
